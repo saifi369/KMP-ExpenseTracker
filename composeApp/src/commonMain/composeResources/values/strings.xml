@@ -1,0 +1,5 @@
+<resources>
+    <string name="home_tab_title">Home</string>
+    <string name="transaction_tab_title">Transactions</string>
+    <string name="settings_tab_title">Settings</string>
+</resources>
