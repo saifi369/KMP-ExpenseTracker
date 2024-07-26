@@ -10,20 +10,21 @@ import androidx.compose.ui.unit.Dp
 
 data class AppColorScheme(
     val background: Color,
-    val onBackground: Color,
     val primary: Color,
     val onPrimary: Color,
     val secondary: Color,
-    val onSecondary: Color,
+    val caribbeanGreen: Color,
+    val lightBlue: Color,
+    val vividBlue: Color,
+    val oceanBlue: Color,
 )
 
 data class AppTypography(
     val titleLarge: TextStyle,
     val titleNormal: TextStyle,
-    val body: TextStyle,
-    val labelLarge: TextStyle,
-    val labelNormal: TextStyle,
-    val labelSmall: TextStyle,
+    val paragraph: TextStyle,
+    val subtitle: TextStyle,
+    val subtext: TextStyle,
 )
 
 data class AppShape(
@@ -40,11 +41,13 @@ data class AppSize(
 val LocalAppColorScheme = staticCompositionLocalOf {
     AppColorScheme(
         background = Color.Unspecified,
-        onBackground = Color.Unspecified,
         primary = Color.Unspecified,
         onPrimary = Color.Unspecified,
         secondary = Color.Unspecified,
-        onSecondary = Color.Unspecified,
+        caribbeanGreen = Color.Unspecified,
+        lightBlue = Color.Unspecified,
+        vividBlue = Color.Unspecified,
+        oceanBlue = Color.Unspecified
     )
 }
 
@@ -52,10 +55,9 @@ val LocalAppTypography = staticCompositionLocalOf {
     AppTypography(
         titleLarge = TextStyle.Default,
         titleNormal = TextStyle.Default,
-        body = TextStyle.Default,
-        labelLarge = TextStyle.Default,
-        labelNormal = TextStyle.Default,
-        labelSmall = TextStyle.Default,
+        paragraph = TextStyle.Default,
+        subtitle = TextStyle.Default,
+        subtext = TextStyle.Default
     )
 }
 

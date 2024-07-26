@@ -2,4 +2,10 @@
     <string name="home_tab_title">Home</string>
     <string name="transaction_tab_title">Transactions</string>
     <string name="settings_tab_title">Settings</string>
+
+    <!--OnBoarding Screen-->
+    <string name="onboarding_screen_one_title_text">Welcome to Expense Manager</string>
+    <string name="onboarding_screen_two_title_text">Are you ready to take control of your finances?</string>
+    <string name="next_button_text">Next</string>
+
 </resources>
