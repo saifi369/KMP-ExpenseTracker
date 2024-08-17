@@ -1,7 +1,9 @@
 <resources>
     <string name="home_tab_title">Home</string>
+    <string name="analytics_tab_title">Analysis</string>
     <string name="transaction_tab_title">Transactions</string>
-    <string name="settings_tab_title">Settings</string>
+    <string name="category_tab_title">Category</string>
+    <string name="profile_tab_title">Profile</string>
 
     <!--OnBoarding Screen-->
     <string name="onboarding_screen_one_title_text">Welcome to Expense Manager</string>

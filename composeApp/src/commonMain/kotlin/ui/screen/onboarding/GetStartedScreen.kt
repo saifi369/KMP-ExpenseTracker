@@ -1,5 +1,6 @@
 package ui.screen.onboarding
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,13 +34,11 @@ import expensify.composeapp.generated.resources.onboarding_screen_two_title_text
 import expensify.composeapp.generated.resources.onboarding_two
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.composables.LargeTitleText
 import ui.theme.AppColor
-import ui.theme.AppTheme
 
 @Composable
-fun GetStartedScreen() {
+fun GetStartedScreen(onNextButtonClick: (Boolean) -> Unit) {
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -118,9 +117,10 @@ fun GetStartedScreen() {
                                 contentDescription = null
                             )
                         }
-                        if (pagerState.currentPage == totalPages - 1) {
+                        AnimatedVisibility(visible = pagerState.currentPage == totalPages - 1) {
                             Spacer(Modifier.size(24.dp))
                             TextButton(onClick = {
+                                onNextButtonClick(true)
                             }) {
                                 LargeTitleText(text = stringResource(Res.string.next_button_text))
                             }
@@ -167,13 +167,5 @@ fun PageIndicator(modifier: Modifier, pagerState: PagerState, totalPages: Int) {
 
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun GetStartedScreenPreview() {
-    AppTheme {
-        GetStartedScreen()
     }
 }

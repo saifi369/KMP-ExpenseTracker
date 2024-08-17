@@ -1,22 +1,27 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.composeCompiler)
     kotlin("plugin.serialization") version "2.0.0"
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 kotlin {
     androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "11"
-            }
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
         }
     }
 
-    jvm("desktop")
+    sourceSets.commonMain {
+        kotlin.srcDir("build/generated/ksp/metadata")
+    }
 
     listOf(
         iosX64(),
@@ -37,11 +42,17 @@ kotlin {
             }
         }
 
-        val desktopMain by getting
-
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
+
+            //Koin
+            implementation(libs.koin.android)
+            implementation(libs.koin.androidx.compose)
+
+            //Splash
+            implementation(libs.core.splashscreen)
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -58,12 +69,24 @@ kotlin {
 
             //Compose Navigation
             implementation(libs.compose.navigation)
-
             implementation(libs.kotlinx.serialization.json)
-        }
 
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
+            //Koin
+            api(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            //ViewModel
+            implementation(libs.lifecycle.viewmodel)
+
+            //DataStore
+            api(libs.datastore)
+            api(libs.preference.datastore)
+
+            implementation(libs.kotlinx.datetime)
+
+            //Room
+            implementation(libs.room.runtime)
+            implementation(libs.sqlite.bundled)
         }
     }
 }
@@ -102,14 +125,16 @@ android {
     }
 }
 
-compose.desktop {
-    application {
-        mainClass = "MainKt"
+room {
+    schemaDirectory("$projectDir/schemas")
+}
 
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.expensify.wallet"
-            packageVersion = "1.0.0"
-        }
+dependencies {
+    add("kspCommonMainMetadata", libs.room.compiler)
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
     }
 }

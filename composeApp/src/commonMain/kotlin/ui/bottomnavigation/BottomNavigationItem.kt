@@ -1,12 +1,11 @@
 package ui.bottomnavigation
 
-import androidx.compose.ui.graphics.vector.ImageVector
-import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
+import ui.screen.navigation.NavGraphs
 
-@OptIn(ExperimentalResourceApi::class)
 data class BottomNavigationItem(
     val title: StringResource,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector,
+    val selectedIcon: DrawableResource,
+    val navRoute : NavGraphs
 )
