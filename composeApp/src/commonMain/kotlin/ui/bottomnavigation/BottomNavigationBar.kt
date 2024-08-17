@@ -67,12 +67,11 @@ fun BottomNavigationBar(rootNavController: NavHostController) {
                 it.hasRoute(item.navRoute::class)
             } == true
             NavigationBarItem(
-//                modifier = Modifier.drawCircleBehind(shapeColor),
                 selected = isSelected,
                 onClick = {
                     rootNavController.navigate(item.navRoute)
                 },
-                alwaysShowLabel = true,
+                alwaysShowLabel = false,
                 colors = NavigationBarItemDefaults.colors(
                     indicatorColor = AppColor.backgroundGreen
                 ),

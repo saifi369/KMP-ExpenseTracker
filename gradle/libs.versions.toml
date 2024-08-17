@@ -26,6 +26,7 @@ kotlinxDateTime = "0.4.1"
 room = "2.7.0-alpha01"
 ksp = "2.0.0-1.0.24"
 sqlite = "2.5.0-SNAPSHOT"
+dateTimePicker = "1.0.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -65,6 +66,8 @@ room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-runtime-android = { module = "androidx.room:room-runtime-android", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+
+dateTimePicker = { module = "network.chaintech:kmp-date-time-picker", version.ref = "dateTimePicker" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

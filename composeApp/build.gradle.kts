@@ -82,11 +82,16 @@ kotlin {
             api(libs.datastore)
             api(libs.preference.datastore)
 
+            //Kotlin DateTime
             implementation(libs.kotlinx.datetime)
 
             //Room
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
+
+            //DateTime Picker
+            implementation(libs.dateTimePicker)
+
         }
     }
 }

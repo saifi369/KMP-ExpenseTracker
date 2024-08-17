@@ -11,8 +11,14 @@ import androidx.compose.ui.unit.dp
 import ui.theme.AppColor
 
 @Composable
-fun TextButton(modifier: Modifier = Modifier, text: String, onClick: () -> Unit) {
+fun TextButton(
+    modifier: Modifier = Modifier,
+    isEnabled: Boolean = true,
+    text: String,
+    onClick: () -> Unit
+) {
     Button(
+        enabled = isEnabled,
         modifier = modifier
             .width(160.dp)
             .clip(RoundedCornerShape(16.dp)),

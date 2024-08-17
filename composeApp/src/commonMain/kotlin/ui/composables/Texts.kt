@@ -1,5 +1,6 @@
 package ui.composables
 
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
@@ -113,10 +114,20 @@ fun LabelNormalBold(modifier: Modifier = Modifier, text: String) {
 
 val textFieldColors: TextFieldColors
     @Composable get() = TextFieldDefaults.colors(
+        selectionColors = TextSelectionColors(
+            handleColor = AppColor.mainGreen,
+            backgroundColor = AppColor.mainGreen
+        ),
+        cursorColor = AppColor.mainGreen,
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,
+        disabledIndicatorColor = Color.Transparent,
         focusedLabelColor = AppColor.mainGreen,
         unfocusedLabelColor = AppColor.mainGreen,
         focusedContainerColor = AppColor.primaryLightGreen,
         unfocusedContainerColor = AppColor.primaryLightGreen,
+        disabledContainerColor = AppColor.primaryLightGreen,
+        disabledTrailingIconColor = AppColor.onPrimaryCyprus,
+        focusedTrailingIconColor = AppColor.onPrimaryCyprus,
+        unfocusedTrailingIconColor = AppColor.onPrimaryCyprus,
     )

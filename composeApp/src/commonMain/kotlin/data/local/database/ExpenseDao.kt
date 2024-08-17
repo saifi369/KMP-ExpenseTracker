@@ -3,7 +3,7 @@ package data.local.database
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import data.local.database.model.ExpenseEntity
+import data.local.model.ExpenseEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

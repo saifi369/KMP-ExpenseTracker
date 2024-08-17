@@ -30,9 +30,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,11 +44,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import data.local.database.model.ExpenseEntity
-import data.local.database.model.TransactionType
+import data.local.model.ExpenseEntity
+import data.local.model.TransactionType
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import network.chaintech.ui.datepicker.WheelDatePickerView
+import network.chaintech.utils.DateTimePickerView
+import network.chaintech.utils.now
 import org.koin.compose.KoinContext
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -86,7 +90,7 @@ fun AddExpenseScreen(
                     titleContentColor = Color.Black,
                     actionIconContentColor = Color.Transparent
                 ),
-                title = { NormalTitleText(text = "Add Expenses") },
+                title = { NormalTitleText(text = "Add $transactionType") },
                 navigationIcon = {
                     IconButton(
                         onClick = { onBackButtonClick() }
@@ -123,7 +127,7 @@ fun AddExpenseScreen(
 
                     SubtitleMediumText(
                         modifier = Modifier.padding(start = 8.dp),
-                        text = "Expense Title"
+                        text = "Title"
                     )
                     TextField(
                         modifier = Modifier
@@ -134,14 +138,7 @@ fun AddExpenseScreen(
                         onValueChange = { expenseTitle = it },
                         maxLines = 1,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                        colors = TextFieldDefaults.colors(
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            focusedLabelColor = AppColor.mainGreen,
-                            unfocusedLabelColor = AppColor.mainGreen,
-                            focusedContainerColor = AppColor.primaryLightGreen,
-                            unfocusedContainerColor = AppColor.primaryLightGreen,
-                        ),
+                        colors = textFieldColors,
                         shape = CircleShape,
                         placeholder = { Text(text = "Enter title") })
 
@@ -158,7 +155,7 @@ fun AddExpenseScreen(
                         onValueChange = { expenseAmount = it },
                         maxLines = 1,
                         keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Next,
+                            imeAction = ImeAction.Done,
                             keyboardType = KeyboardType.Number
                         ),
                         colors = textFieldColors,
@@ -220,8 +217,14 @@ fun AddExpenseScreen(
                         }
                     }
 
-                    val date =
-                        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+                    var showDatePicker by remember { mutableStateOf(false) }
+
+                    var date by remember {
+                        mutableStateOf(
+                            Clock.System.now()
+                                .toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+                        )
+                    }
 
                     SubtitleMediumText(
                         modifier = Modifier.padding(top = 24.dp, start = 8.dp),
@@ -232,25 +235,44 @@ fun AddExpenseScreen(
                             .padding(top = 8.dp)
                             .fillMaxWidth(),
                         textStyle = MaterialTheme.typography.labelMedium,
-                        value = date.toString(),
-                        onValueChange = { },
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        value = date,
+                        enabled = false,
+                        onValueChange = {},
                         maxLines = 1,
                         colors = textFieldColors,
                         shape = CircleShape,
-                        placeholder = { Text(text = "Select the category") }, trailingIcon = {
-                            Box(
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .background(AppColor.mainGreen)
+                        trailingIcon = {
+                            IconButton(
+                                onClick = {
+                                    showDatePicker = true
+                                }
                             ) {
                                 Icon(
-                                    modifier = Modifier
-                                        .background(AppColor.mainGreen),
                                     imageVector = Icons.Filled.DateRange,
                                     contentDescription = null
                                 )
                             }
+                        }
+                    )
+
+                    WheelDatePickerView(
+                        modifier = Modifier.padding(top = 16.dp),
+                        showDatePicker = showDatePicker,
+                        height = 200.dp,
+                        title = "Choose Date",
+                        titleStyle = MaterialTheme.typography.labelLarge,
+                        doneLabelStyle = MaterialTheme.typography.labelLarge,
+                        dateTimePickerView = DateTimePickerView.DIALOG_VIEW,
+                        yearsRange = 2000..LocalDate.now().year,
+                        rowCount = 3,
+                        containerColor = AppColor.backgroundGreen,
+                        shape = RoundedCornerShape(16.dp),
+                        onDoneClick = {
+                            date = it.toString()
+                            showDatePicker = false
+                        },
+                        onDismiss = {
+                            showDatePicker = false
                         }
                     )
 
@@ -272,14 +294,19 @@ fun AddExpenseScreen(
                         modifier = Modifier
                             .size(16.dp)
                     )
+
+                    val isButtonEnabled by derivedStateOf {
+                        expenseTitle.isNotEmpty() && expenseAmount.isNotEmpty() && expenseCategory.isNotEmpty()
+                    }
                     TextButton(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = "Save"
+                        isButtonEnabled,
+                        text = "Save $transactionType"
                     ) {
                         viewModel.saveExpense(
                             ExpenseEntity(
                                 title = expenseTitle,
-                                date = date.toString(),
+                                date = date,
                                 amount = expenseAmount.toDouble(),
                                 category = expenseCategory,
                                 message = expenseMessage,

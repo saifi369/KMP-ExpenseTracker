@@ -3,7 +3,7 @@ package ui.screen.addexpense
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import data.local.database.ExpenseDatabase
-import data.local.database.model.ExpenseEntity
+import data.local.model.ExpenseEntity
 import kotlinx.coroutines.launch
 
 class AddExpenseVM(

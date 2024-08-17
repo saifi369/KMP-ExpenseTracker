@@ -19,8 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import data.local.database.model.ExpenseEntity
-import data.local.database.model.TransactionType
+import data.local.model.TransactionType
+import domain.model.Transaction
 import expensify.composeapp.generated.resources.Res
 import expensify.composeapp.generated.resources.ic_expense
 import expensify.composeapp.generated.resources.ic_income
@@ -32,7 +32,7 @@ import ui.theme.AppColor
 
 @Composable
 fun TransactionItem(
-    transaction: ExpenseEntity,
+    transaction: Transaction,
 ) = Box(
     modifier = Modifier.fillMaxSize()
 ) {
@@ -43,7 +43,7 @@ fun TransactionItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 9.dp)
+            .padding(vertical = 8.dp)
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween

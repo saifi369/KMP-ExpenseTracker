@@ -2,7 +2,7 @@ package data.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import data.local.database.model.ExpenseEntity
+import data.local.model.ExpenseEntity
 
 @Database(entities = [ExpenseEntity::class], version = 1)
 //@ConstructedBy(ExpenseDatabaseConstructor::class)
