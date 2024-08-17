@@ -2,20 +2,24 @@ package ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ui.theme.AppColor.backgroundGreen
-import ui.theme.AppColor.lightBlue
-import ui.theme.AppColor.mainGreen
 import ui.theme.AppColor.onPrimaryCyprus
 import ui.theme.AppColor.primaryLightGreen
 import ui.theme.AppColor.secondaryOceanBlue
-import ui.theme.AppColor.vividBlue
 
 //
 //private val darkColorScheme = AppColorScheme(
@@ -27,41 +31,48 @@ import ui.theme.AppColor.vividBlue
 ////    onSecondary = Pink80
 //)
 
-private val lightColorScheme = AppColorScheme(
+private val lightColorScheme = lightColorScheme(
     background = backgroundGreen,
     primary = primaryLightGreen,
     onPrimary = onPrimaryCyprus,
     secondary = secondaryOceanBlue,
-    caribbeanGreen = mainGreen,
-    lightBlue = lightBlue,
-    vividBlue = vividBlue,
-    oceanBlue = secondaryOceanBlue,
 )
 
 private val typography = AppTypography(
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Bold,
-        fontSize = 30.sp
+        fontSize = 24.sp
     ),
-    titleNormal = TextStyle(
+    titleMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.SemiBold,
         fontSize = 22.sp
     ),
-    paragraph = TextStyle(
+    bodyMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Light,
         fontSize = 16.sp
     ),
-    subtitle = TextStyle(
+    labelMedium = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp
+    ),
+    labelLarge = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Bold,
+        fontSize = 14.sp
+    ),
+    subtitleMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp
     ),
-    subtext = TextStyle(
+    subtitleNormal = TextStyle(
         fontFamily = FontFamily.Default,
-        fontSize = 14.sp
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp
     )
 )
 
@@ -76,6 +87,11 @@ private val size = AppSize(
     small = 8.dp
 )
 
+//@Composable
+//internal expect fun SystemAppearance(isDark: Boolean)
+
+internal val LocalThemeIsDark = compositionLocalOf { mutableStateOf(true) }
+
 @Composable
 fun AppTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
@@ -83,25 +99,17 @@ fun AppTheme(
 ) {
 //    val colorScheme = if (isDarkTheme) darkColorScheme else lightColorScheme
 
+    val systemIsDark = isSystemInDarkTheme()
+    val isDarkState = remember { mutableStateOf(systemIsDark) }
     CompositionLocalProvider(
-        LocalAppColorScheme provides lightColorScheme,
-        LocalAppTypography provides typography,
-        LocalAppShape provides shape,
-        LocalAppSize provides size,
-        content = content
-    )
-}
-
-object AppTheme {
-    val colorScheme: AppColorScheme
-        @Composable get() = LocalAppColorScheme.current
-
-    val typography: AppTypography
-        @Composable get() = LocalAppTypography.current
-
-    val shape: AppShape
-        @Composable get() = LocalAppShape.current
-
-    val size: AppSize
-        @Composable get() = LocalAppSize.current
+        LocalThemeIsDark provides isDarkState
+    ) {
+        val isDark by isDarkState
+//        SystemAppearance(!isDark)
+        MaterialTheme(
+            typography = getTypography(),
+            colorScheme = lightColorScheme,
+            content = { Surface(content = content) }
+        )
+    }
 }

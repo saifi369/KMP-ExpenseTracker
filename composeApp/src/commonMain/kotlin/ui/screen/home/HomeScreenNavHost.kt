@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import ui.screen.navigation.HomeNavRoutes
 
 @Composable
 fun HomeScreenNavHost() {
@@ -12,14 +13,14 @@ fun HomeScreenNavHost() {
 
     NavHost(
         navController = homeNavController,
-        startDestination = "home"
+        startDestination = HomeNavRoutes.Home
     ) {
         addHomeScreen()
     }
 }
 
 private fun NavGraphBuilder.addHomeScreen() {
-    composable(route = "home") {
+    composable<HomeNavRoutes.Home> {
         HomeScreen()
     }
 }
