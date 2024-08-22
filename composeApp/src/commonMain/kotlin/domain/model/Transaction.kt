@@ -1,8 +1,8 @@
 package domain.model
 
-import data.local.model.TransactionType
-
 data class Transaction(
+    val transactionId: Int,
+    val walletId: Int,
     val title: String,
     val date: String,
     val amount: Double,
@@ -10,3 +10,8 @@ data class Transaction(
     val category: String,
     val transactionType: TransactionType
 )
+
+enum class TransactionType {
+    INCOME,
+    EXPENSE
+}

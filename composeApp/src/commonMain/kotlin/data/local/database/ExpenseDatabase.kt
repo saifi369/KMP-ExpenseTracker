@@ -2,13 +2,23 @@ package data.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import data.local.model.ExpenseEntity
+import data.local.database.dao.TransactionDao
+import data.local.database.dao.UserDao
+import data.local.database.dao.WalletDao
+import data.local.model.TransactionEntity
+import data.local.model.UserEntity
+import data.local.model.WalletEntity
 
-@Database(entities = [ExpenseEntity::class], version = 1)
+@Database(
+    entities = [TransactionEntity::class, WalletEntity::class, UserEntity::class],
+    version = 1
+)
 //@ConstructedBy(ExpenseDatabaseConstructor::class)
 abstract class ExpenseDatabase : RoomDatabase(), DB {
 
-    abstract fun expenseDao(): ExpenseDao
+    abstract fun transactionDao(): TransactionDao
+    abstract fun userDao(): UserDao
+    abstract fun walletDao(): WalletDao
 
     override fun clearAllTables() {
         super.clearAllTables()

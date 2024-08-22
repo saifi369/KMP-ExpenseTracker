@@ -8,6 +8,13 @@
     <!--OnBoarding Screen-->
     <string name="onboarding_screen_one_title_text">Welcome to Expense Manager</string>
     <string name="onboarding_screen_two_title_text">Are you ready to take control of your finances?</string>
+    <string name="account_setup_welcome_screen_title_text">Let's setup your account!</string>
+    <string name="account_setup_welcome_screen_subtitle_text">We only support local wallets at the moment</string>
+    <string name="account_setup_screen_username_placeholder_text">Enter your name</string>
+    <string name="account_setup_screen_wallet_title_placeholder_text">Wallet name e.g. Personal</string>
+    <string name="account_setup_screen_toolbar_title_text">Add Wallet</string>
+    <string name="account_setup_screen_balance_title_text">Balance</string>
     <string name="next_button_text">Next</string>
+    <string name="continue_button_text">Continue</string>
 
 </resources>
