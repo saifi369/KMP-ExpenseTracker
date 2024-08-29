@@ -1,17 +1,29 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.konan.target.Family
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.composeCompiler)
-    kotlin("plugin.serialization") version "2.0.0"
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.room)
 }
 
 kotlin {
+
+    targets
+        .filterIsInstance<KotlinNativeTarget>()
+        .filter { it.konanTarget.family == Family.IOS }
+        .forEach { target ->
+            target.binaries.framework {
+                export(libs.calf.adaptive)
+            }
+        }
+
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
@@ -91,6 +103,9 @@ kotlin {
 
             //DateTime Picker
             implementation(libs.dateTimePicker)
+
+            //Calf
+            api(libs.calf.adaptive)
 
         }
     }

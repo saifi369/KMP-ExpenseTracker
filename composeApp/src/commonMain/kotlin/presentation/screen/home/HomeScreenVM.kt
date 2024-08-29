@@ -3,6 +3,7 @@ package presentation.screen.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import domain.model.Transaction
+import domain.model.TransactionType
 import domain.model.User
 import domain.model.Wallet
 import domain.repo.TransactionRepo
@@ -31,6 +32,9 @@ class HomeScreenVM(
 
     private val _user = MutableStateFlow<User?>(null)
     val userInfo = _user.asStateFlow()
+
+    private val _balanceInfo = MutableStateFlow(BalanceInfo())
+    val balanceInfo = _balanceInfo.asStateFlow()
 
     init {
         loadUserInfo()
@@ -75,11 +79,35 @@ class HomeScreenVM(
         viewModelScope.launch {
             val wallet = _walletsList.value.firstOrNull()
             if (wallet != null) {
-                transactionRepo.getTransactionsForWallet(wallet.walletId).collectLatest {
-                    _expensesList.value = it
+                transactionRepo.getTransactionsForWallet(wallet.walletId).collectLatest { list ->
+                    _expensesList.value = list
+
+                    //summerize this code
+                    val incomeTransactions =
+                        list.filter { transaction -> transaction.transactionType == TransactionType.INCOME }
+
+                    val expenseTransactions =
+                        list.filter { transaction -> transaction.transactionType == TransactionType.EXPENSE }
+
+                    val totalIncome = incomeTransactions.sumOf { it.amount }
+                    val totalExpense = expenseTransactions.sumOf { it.amount }
+                    val totalBalance = wallet.balance + totalIncome - totalExpense
+
+                    _balanceInfo.value = BalanceInfo(
+                        totalBalance = totalBalance,
+                        income = totalIncome,
+                        expense = totalExpense
+                    )
+
                 }
             }
             _isLoading.value = false
         }
     }
 }
+
+data class BalanceInfo(
+    val totalBalance: Double = 0.0,
+    val income: Double = 0.0,
+    val expense: Double = 0.0
+)

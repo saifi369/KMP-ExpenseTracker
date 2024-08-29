@@ -4,31 +4,33 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import presentation.theme.AppColor
+import presentation.theme.AppTheme
 
 @Composable
-fun TextButton(
+fun PrimaryButton(
     modifier: Modifier = Modifier,
-    isEnabled: Boolean = true,
     text: String,
-    onClick: () -> Unit
+    isEnabled: Boolean = true,
+    onClick: () -> Unit,
 ) {
     Button(
-        enabled = isEnabled,
         modifier = modifier
             .width(160.dp)
             .clip(RoundedCornerShape(16.dp)),
         colors = ButtonDefaults.buttonColors(
-            containerColor = AppColor.mainGreen,
-            contentColor = AppColor.onPrimaryCyprus
+            containerColor = AppTheme.colorScheme.mainGreen,
+            contentColor = AppTheme.colorScheme.onPrimaryCyprus
         ),
+        enabled = isEnabled,
         onClick = { onClick() }
     ) {
-        SubtitleMediumText(text = text)
+        Text(text = text, style = AppTheme.typography.titleSmall)
     }
 }
 

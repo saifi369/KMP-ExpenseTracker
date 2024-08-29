@@ -13,7 +13,7 @@ androidx-test-junit = "1.1.5"
 compose = "1.6.11"
 compose-plugin = "1.7.0-alpha01"
 junit = "4.13.2"
-kotlin = "2.0.0"
+kotlin = "2.0.10"
 kotlinxSerializationJson = "1.7.1"
 voyagerVersion = "1.0.0"
 datastorePreference = "1.1.1"
@@ -27,6 +27,7 @@ room = "2.7.0-alpha01"
 ksp = "2.0.0-1.0.24"
 sqlite = "2.5.0-SNAPSHOT"
 dateTimePicker = "1.0.2"
+calf = "0.5.5"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -68,6 +69,8 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
 dateTimePicker = { module = "network.chaintech:kmp-date-time-picker", version.ref = "dateTimePicker" }
+
+calf-adaptive = { module = "com.mohamedrejeb.calf:calf-ui", version.ref = "calf" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

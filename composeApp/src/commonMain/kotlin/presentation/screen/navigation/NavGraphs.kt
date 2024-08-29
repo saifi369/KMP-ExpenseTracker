@@ -1,5 +1,6 @@
 package presentation.screen.navigation
 
+import domain.model.TransactionType
 import kotlinx.serialization.Serializable
 
 @Serializable

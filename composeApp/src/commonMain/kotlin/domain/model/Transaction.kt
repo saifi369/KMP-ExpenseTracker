@@ -1,7 +1,7 @@
 package domain.model
 
 data class Transaction(
-    val transactionId: Int,
+    val transactionId: Int = 0,
     val walletId: Int,
     val title: String,
     val date: String,
@@ -11,7 +11,7 @@ data class Transaction(
     val transactionType: TransactionType
 )
 
-enum class TransactionType {
-    INCOME,
-    EXPENSE
+enum class TransactionType(val title: String) {
+    INCOME("Income"),
+    EXPENSE("Expense")
 }

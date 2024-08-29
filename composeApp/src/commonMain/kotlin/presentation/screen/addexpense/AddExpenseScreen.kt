@@ -2,24 +2,19 @@ package presentation.screen.addexpense
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -30,8 +25,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,11 +34,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import domain.model.TransactionType
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -53,121 +51,116 @@ import network.chaintech.utils.DateTimePickerView
 import network.chaintech.utils.now
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
-import presentation.composables.NormalTitleText
-import presentation.composables.SubtitleMediumText
-import presentation.composables.TextButton
+import presentation.composables.AppCenterTopBar
+import presentation.composables.PrimaryButton
 import presentation.composables.textFieldColors
+import presentation.composables.textFieldTransparentColors
+import presentation.screen.categories
 import presentation.theme.AppColor
+import presentation.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class, KoinExperimentalAPI::class)
 @Composable
 fun AddExpenseScreen(
-    transactionType: String,
-    onBackButtonClick: () -> Unit,
-) = Box(
-    modifier = Modifier.fillMaxSize(),
+    transactionType: String = TransactionType.INCOME.name,
+    onBackButtonClick: () -> Unit
 ) {
-
-
-    val viewModel = koinViewModel<AddExpenseVM>()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColor.mainGreen),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .imePadding()
+            .background(if (transactionType == TransactionType.INCOME.title) AppTheme.colorScheme.green else AppTheme.colorScheme.red),
     ) {
 
-        CenterAlignedTopAppBar(
-            colors = TopAppBarColors(
-                containerColor = Color.Transparent,
-                scrolledContainerColor = Color.Transparent,
-                navigationIconContentColor = AppColor.backgroundGreen,
-                titleContentColor = Color.Black,
-                actionIconContentColor = Color.Transparent
-            ),
-            title = { NormalTitleText(text = "Add $transactionType") },
-            navigationIcon = {
-                IconButton(
-                    onClick = { onBackButtonClick() }
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null,
-                    )
-                }
-            }
-        )
+        val viewModel: AddExpenseVM = koinViewModel()
 
-        Box(
+        val walletList by viewModel.walletsList.collectAsStateWithLifecycle()
+        val focusRequester = remember { FocusRequester() }
+        val scrollState = rememberScrollState()
+
+        LaunchedEffect(key1 = Unit) {
+            focusRequester.requestFocus()
+        }
+
+        AppCenterTopBar(label = "Add $transactionType") {
+            onBackButtonClick()
+        }
+
+        Column(
             modifier = Modifier
-                .padding(top = 16.dp)
-                .clip(RoundedCornerShape(32.dp, 32.dp, 0.dp, 0.dp))
-                .background(AppColor.backgroundGreen)
                 .fillMaxSize()
-                .weight(9.5f),
+                .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Bottom
         ) {
-            Column(
+
+            var expenseTitle by remember { mutableStateOf("") }
+            var expenseAmount by remember { mutableStateOf("") }
+            var expenseCategory by remember { mutableStateOf("") }
+            var expenseMessage by remember { mutableStateOf("") }
+
+            Text(
+                modifier = Modifier.padding(start = 16.dp),
+                text = "How much?",
+                style = AppTheme.typography.titleSmall,
+                color = AppTheme.colorScheme.baseLight80.copy(alpha = 0.7f)
+            )
+
+            TextField(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .padding(all = 32.dp),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Top,
+                    .height(96.dp)
+                    .focusRequester(focusRequester),
+                value = expenseAmount,
+                onValueChange = {
+                    expenseAmount = it
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Decimal,
+                    capitalization = KeyboardCapitalization.Sentences
+                ),
+                maxLines = 1,
+                singleLine = true,
+                textStyle = AppTheme.typography.titleXLarge,
+                placeholder = {
+                    Text(
+                        text = "0",
+                        color = AppTheme.colorScheme.baseLight80,
+                        style = AppTheme.typography.titleXLarge,
+                    )
+                },
+                colors = textFieldTransparentColors
+            )
+
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .background(AppTheme.colorScheme.backgroundGreen, AppTheme.shape.container)
+                    .padding(vertical = 32.dp, horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-
-                var expenseTitle by remember { mutableStateOf("") }
-                var expenseAmount by remember { mutableStateOf("") }
-                var expenseCategory by remember { mutableStateOf("") }
-                var expenseMessage by remember { mutableStateOf("") }
-
-                SubtitleMediumText(
-                    modifier = Modifier.padding(start = 8.dp),
-                    text = "Title"
-                )
                 TextField(
                     modifier = Modifier
-                        .padding(top = 8.dp)
                         .fillMaxWidth(),
-                    textStyle = MaterialTheme.typography.labelMedium,
+                    textStyle = AppTheme.typography.bodyLargeRegular,
                     value = expenseTitle,
                     onValueChange = { expenseTitle = it },
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     colors = textFieldColors,
-                    shape = CircleShape,
-                    placeholder = { Text(text = "Enter title") })
-
-                SubtitleMediumText(
-                    modifier = Modifier.padding(top = 24.dp, start = 8.dp),
-                    text = "Amount"
-                )
-                TextField(
-                    modifier = Modifier
-                        .padding(top = 8.dp)
-                        .fillMaxWidth(),
-                    textStyle = MaterialTheme.typography.labelMedium,
-                    value = expenseAmount,
-                    onValueChange = { expenseAmount = it },
-                    maxLines = 1,
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done,
-                        keyboardType = KeyboardType.Number
-                    ),
-                    colors = textFieldColors,
-                    shape = CircleShape,
-                    placeholder = { Text(text = "Enter amount") })
-
-                SubtitleMediumText(
-                    modifier = Modifier.padding(top = 24.dp, start = 8.dp),
-                    text = "Category"
+                    shape = RoundedCornerShape(16.dp),
+                    placeholder = {
+                        TextFieldPlaceholderText(label = "Title")
+                    }
                 )
 
-                val options = listOf("Rent", "Groceries", "Food", "Entertainment", "Loan")
                 var expanded by remember { mutableStateOf(false) }
 
                 ExposedDropdownMenuBox(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
                     expanded = expanded,
                     onExpandedChange = {
                         expanded = !expanded
@@ -176,22 +169,17 @@ fun AddExpenseScreen(
                     TextField(
                         modifier = Modifier
                             .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
-                            .padding(top = 8.dp)
                             .fillMaxWidth(),
-                        textStyle = MaterialTheme.typography.labelMedium,
+                        textStyle = AppTheme.typography.bodyLargeRegular,
                         readOnly = true,
                         value = expenseCategory,
                         onValueChange = { },
                         maxLines = 1,
-                        shape = CircleShape,
+                        shape = RoundedCornerShape(16.dp),
                         colors = textFieldColors,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                        placeholder = { Text("Select the category") },
-                        trailingIcon = {
-                            ExposedDropdownMenuDefaults.TrailingIcon(
-                                expanded = expanded
-                            )
-                        },
+                        placeholder = { TextFieldPlaceholderText(label = "Select the category") },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
                     )
                     ExposedDropdownMenu(
                         expanded = expanded,
@@ -199,14 +187,17 @@ fun AddExpenseScreen(
                             expanded = false
                         }
                     ) {
-                        options.forEach { selectionOption ->
+                        categories.forEach { selectionOption ->
                             DropdownMenuItem(
                                 onClick = {
-                                    expenseCategory = selectionOption
+                                    expenseCategory = selectionOption.title
                                     expanded = false
                                 },
                                 text = {
-                                    Text(text = selectionOption)
+                                    Text(
+                                        text = selectionOption.title,
+                                        style = AppTheme.typography.bodyLargeRegular
+                                    )
                                 }
                             )
                         }
@@ -214,7 +205,6 @@ fun AddExpenseScreen(
                 }
 
                 var showDatePicker by remember { mutableStateOf(false) }
-
                 var date by remember {
                     mutableStateOf(
                         Clock.System.now()
@@ -222,25 +212,21 @@ fun AddExpenseScreen(
                     )
                 }
 
-                SubtitleMediumText(
-                    modifier = Modifier.padding(top = 24.dp, start = 8.dp),
-                    text = "Date"
-                )
                 TextField(
                     modifier = Modifier
-                        .padding(top = 8.dp)
+                        .padding(top = 16.dp)
                         .fillMaxWidth(),
-                    textStyle = MaterialTheme.typography.labelMedium,
+                    textStyle = AppTheme.typography.bodyLargeRegular,
                     value = date,
                     enabled = false,
                     onValueChange = {},
                     maxLines = 1,
-                    colors = textFieldColors,
-                    shape = CircleShape,
+                    colors = textFieldColors.copy(disabledTextColor = AppTheme.colorScheme.onPrimaryCyprus),
+                    shape = RoundedCornerShape(16.dp),
                     trailingIcon = {
                         IconButton(
                             onClick = {
-                                showDatePicker = true
+//                                showDatePicker = true
                             }
                         ) {
                             Icon(
@@ -250,6 +236,8 @@ fun AddExpenseScreen(
                         }
                     }
                 )
+
+//                TODO(): Fix the crash on iOS
 
                 WheelDatePickerView(
                     modifier = Modifier.padding(top = 16.dp),
@@ -271,49 +259,54 @@ fun AddExpenseScreen(
                         showDatePicker = false
                     }
                 )
-
                 TextField(
                     modifier = Modifier
-                        .padding(top = 32.dp)
                         .fillMaxWidth()
-                        .height(150.dp),
-                    textStyle = MaterialTheme.typography.labelMedium,
+                        .padding(top = 16.dp),
+                    textStyle = AppTheme.typography.bodyLargeRegular,
                     value = expenseMessage,
+                    maxLines = 5,
                     onValueChange = { expenseMessage = it },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        capitalization = KeyboardCapitalization.Sentences
+                    ),
                     colors = textFieldColors,
                     shape = RoundedCornerShape(corner = CornerSize(16.dp)),
-                    placeholder = { Text(text = "Enter Message") },
+                    placeholder = { TextFieldPlaceholderText(label = "Enter Message") },
                 )
+                val isButtonEnabled by remember { derivedStateOf { expenseTitle.isNotEmpty() && expenseAmount.isNotEmpty() && expenseCategory.isNotEmpty() } }
 
-                Spacer(
+                PrimaryButton(
                     modifier = Modifier
-                        .size(16.dp)
-                )
-
-                val isButtonEnabled by derivedStateOf {
-                    expenseTitle.isNotEmpty() && expenseAmount.isNotEmpty() && expenseCategory.isNotEmpty()
-                }
-                TextButton(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    isButtonEnabled,
-                    text = "Save $transactionType"
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 64.dp),
+                    text = "Save",
+                    isEnabled = isButtonEnabled
                 ) {
-//                        viewModel.saveExpense(
-//                            TransactionEntity(
-//                                title = expenseTitle,
-//                                date = date,
-//                                amount = expenseAmount.toDouble(),
-//                                category = expenseCategory,
-//                                message = expenseMessage,
-//                                transactionType = TransactionType.valueOf(transactionType),
-//
-//                            )
-//                        )
-//                        onBackButtonClick()
+                    if (walletList.isNotEmpty()) {
+                        viewModel.saveExpense(
+                            title = expenseTitle,
+                            date = date,
+                            amount = expenseAmount.toDouble(),
+                            category = expenseCategory,
+                            message = expenseMessage,
+                            transactionType = transactionType,
+                            wallet = walletList.first()
+                        )
+                    }
+                    onBackButtonClick()
                 }
             }
         }
     }
+}
 
+@Composable
+fun TextFieldPlaceholderText(label: String) {
+    Text(
+        text = label,
+        style = AppTheme.typography.labelPlaceholder,
+        color = AppTheme.colorScheme.baseLight20
+    )
 }

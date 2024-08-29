@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
+import domain.model.TransactionType
 import expensify.composeapp.generated.resources.Res
 import expensify.composeapp.generated.resources.ic_expense
 import expensify.composeapp.generated.resources.ic_income
@@ -40,7 +41,7 @@ import presentation.theme.AppColor
 
 
 @Composable
-fun MainFab(onClick: (String) -> Unit) {
+fun MainFab(onClick: (TransactionType) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
     val items = listOf(
@@ -59,7 +60,7 @@ fun MainFab(onClick: (String) -> Unit) {
             ) {
                 items(items) {
                     FabItemUI(it) {
-                        onClick(it.title)
+                        onClick(if (it.title == "Income") TransactionType.INCOME else TransactionType.EXPENSE)
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                 }

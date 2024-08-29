@@ -1,6 +1,5 @@
 package presentation.theme
 
-import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
@@ -12,36 +11,48 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import expensify.composeapp.generated.resources.Res
-import expensify.composeapp.generated.resources.leaguespartan_regular
-import expensify.composeapp.generated.resources.poppins_light
-import expensify.composeapp.generated.resources.poppins_semibold
+import expensify.composeapp.generated.resources.inter_bold
+import expensify.composeapp.generated.resources.inter_medium
+import expensify.composeapp.generated.resources.inter_semibold
+import expensify.composeapp.generated.resources.inter_regular
 import org.jetbrains.compose.resources.Font
 
 
 data class AppColorScheme(
-    val background: Color,
-    val primary: Color,
-    val onPrimary: Color,
-    val secondary: Color,
-    val caribbeanGreen: Color,
+    val base: Color,
+    val baseLight80: Color,
+    val baseLight20: Color,
+    val violet: Color,
+    val blue: Color,
     val lightBlue: Color,
-    val vividBlue: Color,
-    val oceanBlue: Color,
+    val red: Color,
+    val green: Color,
+    val yellow: Color,
+    val backgroundGreen: Color,
+    val primaryLightGreen: Color,
+    val onPrimaryCyprus: Color,
+    val mainGreen: Color
 )
 
 data class AppTypography(
+    val titleXLarge: TextStyle,
     val titleLarge: TextStyle,
     val titleMedium: TextStyle,
-    val bodyMedium: TextStyle,
-    val labelMedium: TextStyle,
-    val labelLarge: TextStyle,
-    val subtitleMedium: TextStyle,
-    val subtitleNormal: TextStyle,
+    val titleSmall: TextStyle,
+    val bodyLarge: TextStyle,
+    val bodyLargeRegular: TextStyle,
+    val bodyLargeSemiBold: TextStyle,
+    val bodySmall: TextStyle,
+    val labelSmall: TextStyle,
+    val labelTiny: TextStyle,
+    val labelPlaceholder: TextStyle,
 )
 
 data class AppShape(
     val container: Shape,
     val button: Shape,
+    val textField: Shape,
+    val icon: Shape
 )
 
 data class AppSize(
@@ -52,33 +63,44 @@ data class AppSize(
 
 val LocalAppColorScheme = staticCompositionLocalOf {
     AppColorScheme(
-        background = Color.Unspecified,
-        primary = Color.Unspecified,
-        onPrimary = Color.Unspecified,
-        secondary = Color.Unspecified,
-        caribbeanGreen = Color.Unspecified,
+        base = Color.Unspecified,
+        baseLight80 = Color.Unspecified,
+        baseLight20 = Color.Unspecified,
+        violet = Color.Unspecified,
+        blue = Color.Unspecified,
         lightBlue = Color.Unspecified,
-        vividBlue = Color.Unspecified,
-        oceanBlue = Color.Unspecified
+        red = Color.Unspecified,
+        green = Color.Unspecified,
+        yellow = Color.Unspecified,
+        backgroundGreen = Color.Unspecified,
+        primaryLightGreen = Color.Unspecified,
+        onPrimaryCyprus = Color.Unspecified,
+        mainGreen = Color.Unspecified
     )
 }
 
 val LocalAppTypography = staticCompositionLocalOf {
     AppTypography(
-        titleLarge = TextStyle.Default,
+        titleXLarge = TextStyle.Default,
         titleMedium = TextStyle.Default,
-        bodyMedium = TextStyle.Default,
-        labelMedium = TextStyle.Default,
-        labelLarge = TextStyle.Default,
-        subtitleMedium = TextStyle.Default,
-        subtitleNormal = TextStyle.Default,
+        titleLarge = TextStyle.Default,
+        titleSmall = TextStyle.Default,
+        bodyLarge = TextStyle.Default,
+        bodyLargeRegular = TextStyle.Default,
+        bodyLargeSemiBold = TextStyle.Default,
+        bodySmall = TextStyle.Default,
+        labelSmall = TextStyle.Default,
+        labelTiny = TextStyle.Default,
+        labelPlaceholder = TextStyle.Default,
     )
 }
 
 val LocalAppShape = staticCompositionLocalOf {
     AppShape(
         container = RectangleShape,
-        button = RectangleShape
+        button = RectangleShape,
+        textField = RectangleShape,
+        icon = RectangleShape
     )
 }
 
@@ -90,92 +112,76 @@ val LocalAppSize = staticCompositionLocalOf {
     )
 }
 
-val baseline = Typography()
-
 @Composable
-fun getTypography(): Typography {
-    val bodyFontFamily = FontFamily(Font(Res.font.poppins_light, FontWeight.Light))
-    val displayFontFamily = FontFamily(Font(Res.font.poppins_light, FontWeight.SemiBold))
-    val titleFontFamily = FontFamily(Font(Res.font.poppins_semibold, FontWeight.SemiBold))
-    val subtextFontFamily = FontFamily(Font(Res.font.leaguespartan_regular, FontWeight.Normal))
-    return Typography(
-        displayLarge = baseline.displayLarge.copy(
-            fontFamily = displayFontFamily,
-            color = AppColor.onPrimaryCyprus
+fun getAppTypography(): AppTypography {
+    val interFontFamily = FontFamily(
+        Font(Res.font.inter_regular, FontWeight.Normal),
+        Font(Res.font.inter_medium, FontWeight.Medium),
+        Font(Res.font.inter_semibold, FontWeight.SemiBold),
+        Font(Res.font.inter_bold, FontWeight.Bold),
+    )
+
+    return AppTypography(
+        titleXLarge = TextStyle(
+            fontFamily = interFontFamily,
+            fontSize = 64.sp,
+            fontWeight = FontWeight.Bold,
+            lineHeight = 80.sp,
         ),
-        displayMedium = baseline.displayMedium.copy(
-            fontFamily = displayFontFamily,
-            color = AppColor.onPrimaryCyprus
+        titleLarge = TextStyle(
+            fontFamily = interFontFamily,
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            lineHeight = 39.sp,
         ),
-        displaySmall = baseline.displaySmall.copy(
-            fontFamily = displayFontFamily,
-            color = AppColor.onPrimaryCyprus
-        ),
-        headlineLarge = baseline.headlineLarge.copy(
-            fontFamily = displayFontFamily,
-            color = AppColor.onPrimaryCyprus
-        ),
-        headlineMedium = baseline.headlineMedium.copy(
-            fontFamily = displayFontFamily,
-            color = AppColor.onPrimaryCyprus
-        ),
-        headlineSmall = baseline.headlineSmall.copy(
-            fontFamily = displayFontFamily,
-            color = AppColor.onPrimaryCyprus
-        ),
-        titleLarge = baseline.titleLarge.copy(
-            fontFamily = titleFontFamily,
+        titleMedium = TextStyle(
+            fontFamily = interFontFamily,
             fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = AppColor.onPrimaryCyprus
-        ),
-        titleMedium = baseline.titleMedium.copy(
-            fontFamily = titleFontFamily,
-            fontSize = 22.sp,
             fontWeight = FontWeight.SemiBold,
-            color = AppColor.onPrimaryCyprus
         ),
-        titleSmall = baseline.titleSmall.copy(
-            fontFamily = titleFontFamily,
-            fontSize = 20.sp,
+        titleSmall = TextStyle(
+            fontFamily = interFontFamily,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold,
+        ),
+        bodyLarge = TextStyle(
+            fontFamily = interFontFamily,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+        ),
+        bodyLargeSemiBold = TextStyle(
+            fontFamily = interFontFamily,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.SemiBold,
+        ),
+        bodyLargeRegular = TextStyle(
+            fontFamily = interFontFamily,
+            fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
-            color = AppColor.onPrimaryCyprus
         ),
-        bodyLarge = baseline.bodyLarge.copy(
-            fontFamily = bodyFontFamily,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Light,
-            color = AppColor.onPrimaryCyprus
+        bodySmall = TextStyle(
+            fontFamily = interFontFamily,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            lineHeight = 18.sp,
         ),
-        bodyMedium = baseline.bodyMedium.copy(
-            fontFamily = bodyFontFamily,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Light,
-            color = AppColor.onPrimaryCyprus
+        labelSmall = TextStyle(
+            fontFamily = interFontFamily,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Medium,
+            lineHeight = 16.sp,
         ),
-        bodySmall = baseline.bodySmall.copy(
-            fontFamily = bodyFontFamily,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Light,
-            color = AppColor.onPrimaryCyprus
-        ),
-        labelLarge = baseline.labelLarge.copy(
-            fontFamily = subtextFontFamily,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            color = AppColor.onPrimaryCyprus
-        ),
-        labelMedium = baseline.labelMedium.copy(
-            fontFamily = subtextFontFamily,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            color = AppColor.onPrimaryCyprus
-        ),
-        labelSmall = baseline.labelSmall.copy(
-            fontFamily = subtextFontFamily,
+        labelTiny = TextStyle(
+            fontFamily = interFontFamily,
             fontSize = 12.sp,
-            fontWeight = FontWeight.Normal,
-            color = AppColor.onPrimaryCyprus
+            fontWeight = FontWeight.Medium,
+            lineHeight = 12.sp,
         ),
+        labelPlaceholder = TextStyle(
+            fontFamily = interFontFamily,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            lineHeight = 18.sp,
+        )
     )
 }

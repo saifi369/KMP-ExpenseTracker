@@ -30,10 +30,4 @@ class SplashScreenVM(
             }
         }
     }
-
-    fun setOnboardedStatus(onBoarded: Boolean) {
-        viewModelScope.launch {
-            userPrefRepo.saveValue(onBoarded)
-        }
-    }
 }
