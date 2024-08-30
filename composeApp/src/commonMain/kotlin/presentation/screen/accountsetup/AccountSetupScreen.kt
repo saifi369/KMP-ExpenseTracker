@@ -9,12 +9,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -28,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -49,6 +46,7 @@ import presentation.composables.PrimaryButton
 import presentation.composables.SubtitleMediumText
 import presentation.composables.textFieldColors
 import presentation.composables.textFieldTransparentColors
+import presentation.screen.addexpense.TextFieldPlaceholderText
 import presentation.theme.AppColor
 import presentation.theme.AppTheme
 
@@ -71,8 +69,8 @@ fun AccountSetupScreen(
   val scrollState = rememberScrollState()
   val keyboardController = LocalSoftwareKeyboardController.current
 
-  if (isUserSaved == true) {
-    LaunchedEffect(Unit) {
+  LaunchedEffect(isUserSaved) {
+    if (isUserSaved == true) {
       keyboardController?.hide()
       onDoneClick()
     }
@@ -117,9 +115,7 @@ fun AccountSetupScreen(
       ),
       maxLines = 1,
       singleLine = true,
-      textStyle = TextStyle(
-        fontSize = 48.sp,
-      ),
+      textStyle = TextStyle(fontSize = 48.sp),
       placeholder = { Text(text = "00.0", fontSize = 48.sp) },
       colors = textFieldTransparentColors
     )
@@ -136,7 +132,7 @@ fun AccountSetupScreen(
         modifier = Modifier
           .padding(top = 8.dp)
           .fillMaxWidth(),
-        textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Normal),
+        textStyle = AppTheme.typography.bodyLargeRegular,
         value = accountName,
         onValueChange = { accountName = it },
         singleLine = true,
@@ -145,19 +141,14 @@ fun AccountSetupScreen(
           capitalization = KeyboardCapitalization.Sentences
         ),
         colors = textFieldColors,
-        shape = CircleShape,
-        placeholder = {
-          Text(
-            text = stringResource(Res.string.account_setup_screen_username_placeholder_text),
-            fontSize = 18.sp
-          )
-        }
+        shape = AppTheme.shape.textField,
+        placeholder = { TextFieldPlaceholderText(label = stringResource(Res.string.account_setup_screen_username_placeholder_text)) }
       )
       TextField(
         modifier = Modifier
           .padding(top = 16.dp)
           .fillMaxWidth(),
-        textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Normal),
+        textStyle = AppTheme.typography.bodyLargeRegular,
         value = walletName,
         onValueChange = { walletName = it },
         singleLine = true,
@@ -166,12 +157,9 @@ fun AccountSetupScreen(
           capitalization = KeyboardCapitalization.Sentences
         ),
         colors = textFieldColors,
-        shape = CircleShape,
+        shape = AppTheme.shape.textField,
         placeholder = {
-          Text(
-            text = stringResource(Res.string.account_setup_screen_wallet_title_placeholder_text),
-            fontSize = 18.sp
-          )
+          TextFieldPlaceholderText(label = stringResource(Res.string.account_setup_screen_wallet_title_placeholder_text))
         }
       )
 

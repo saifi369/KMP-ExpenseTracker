@@ -11,38 +11,38 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 class AccountSetupVM(
-    private val saveUserUserUseCase: SaveUserUseCase,
-    private val createWalletUseCase: CreateWalletUseCase,
-    private val userPrefRepo: UserPrefRepo,
+  private val saveUserUserUseCase: SaveUserUseCase,
+  private val createWalletUseCase: CreateWalletUseCase,
+  private val userPrefRepo: UserPrefRepo,
 ) : ViewModel() {
 
-    private val _isUserSaved = MutableSharedFlow<Boolean>()
-    val isUserSaved = _isUserSaved.asSharedFlow()
+  private val _isUserSaved = MutableSharedFlow<Boolean>()
+  val isUserSaved = _isUserSaved.asSharedFlow()
 
-    fun createUser(username: String, walletName: String, walletBalance: Double) {
-        viewModelScope.launch {
-            val user = User(name = username)
-            when (saveUserUserUseCase(user)) {
-                is domain.utils.Result.Success -> {
-                    createUserWallet(walletName, walletBalance)
-                }
-
-                is domain.utils.Result.Error -> {
-                    _isUserSaved.emit(false)
-                }
-            }
+  fun createUser(username: String, walletName: String, walletBalance: Double) {
+    viewModelScope.launch {
+      val user = User(name = username)
+      when (saveUserUserUseCase(user)) {
+        is domain.utils.Result.Success -> {
+          createUserWallet(walletName, walletBalance)
         }
-    }
 
-    private fun createUserWallet(walletName: String, walletBalance: Double) {
-        viewModelScope.launch {
-            createWalletUseCase.invoke(walletName, walletBalance)
-            setOnboardedStatus(onBoarded = true)
-            _isUserSaved.emit(true)
+        is domain.utils.Result.Error -> {
+          _isUserSaved.emit(false)
         }
+      }
     }
+  }
 
-    private suspend fun setOnboardedStatus(onBoarded: Boolean) {
-        userPrefRepo.saveValue(onBoarded)
+  private fun createUserWallet(walletName: String, walletBalance: Double) {
+    viewModelScope.launch {
+      createWalletUseCase.invoke(walletName, walletBalance)
+      setOnboardedStatus(onBoarded = true)
+      _isUserSaved.emit(true)
     }
+  }
+
+  private suspend fun setOnboardedStatus(onBoarded: Boolean) {
+    userPrefRepo.saveValue(onBoarded)
+  }
 }

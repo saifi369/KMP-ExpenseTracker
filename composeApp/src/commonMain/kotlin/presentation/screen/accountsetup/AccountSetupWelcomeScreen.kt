@@ -38,37 +38,31 @@ fun AccountSetupWelcomeScreen(
     verticalArrangement = Arrangement.SpaceBetween
   ) {
 
+    Spacer(modifier = Modifier.weight(.5f))
     Column(
-      modifier = Modifier
-        .fillMaxSize(),
-      verticalArrangement = Arrangement.SpaceAround
+      modifier = Modifier.weight(2f)
     ) {
-      Spacer(modifier = Modifier.weight(1f))
-      Column(
-        modifier = Modifier.weight(2f)
-      ) {
-        Text(
-          text = stringResource(Res.string.account_setup_welcome_screen_title_text),
-          textAlign = TextAlign.Start,
-          style = AppTheme.typography.bodyLarge.copy(fontSize = 36.sp)
-        )
-        Spacer(Modifier.size(8.dp))
-        Text(
-          text = stringResource(Res.string.account_setup_welcome_screen_subtitle_text),
-          style = AppTheme.typography.bodyLargeRegular,
-          color = AppTheme.colorScheme.backgroundGreen,
-        )
-      }
-      Spacer(
-        modifier = Modifier
-          .weight(1f)
+      Text(
+        text = stringResource(Res.string.account_setup_welcome_screen_title_text),
+        textAlign = TextAlign.Start,
+        style = AppTheme.typography.bodyLarge.copy(fontSize = 36.sp)
       )
-      SecondaryButton(
-        modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
-        label = stringResource(Res.string.continue_button_text)
-      ) {
-        onNextButtonClick()
-      }
+      Spacer(Modifier.size(8.dp))
+      Text(
+        text = stringResource(Res.string.account_setup_welcome_screen_subtitle_text),
+        style = AppTheme.typography.bodyLargeRegular,
+        color = AppTheme.colorScheme.backgroundGreen,
+      )
+    }
+    Spacer(
+      modifier = Modifier
+        .weight(1f)
+    )
+    SecondaryButton(
+      modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
+      label = stringResource(Res.string.continue_button_text)
+    ) {
+      onNextButtonClick()
     }
   }
 }

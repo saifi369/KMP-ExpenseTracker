@@ -17,45 +17,45 @@ import presentation.theme.AppTheme
 @Composable
 @Preview
 fun App() {
-    AppTheme {
-        KoinContext {
-            val splashNavController = rememberNavController()
+  AppTheme {
+    KoinContext {
+      val splashNavController = rememberNavController()
 
-            NavHost(splashNavController, SplashNavRoutes.Splash) {
-                composable<SplashNavRoutes.Splash> {
-                    SplashScreen {
-                        splashNavController.popBackStack()
-                        splashNavController.navigate(it)
-                    }
-                }
-                composable<SplashNavRoutes.OnBoarding> {
-                    GetStartedScreen {
-                        splashNavController.navigate(SplashNavRoutes.AccountSetupWelcome)
-                    }
-                }
-                composable<SplashNavRoutes.AccountSetupWelcome> {
-                    AccountSetupWelcomeScreen {
-                        splashNavController.navigate(SplashNavRoutes.AccountSetup)
-                    }
-                }
-                composable<SplashNavRoutes.AccountSetup> {
-                    AccountSetupScreen(
-                        onDoneClick = {
-                            splashNavController.navigate(SplashNavRoutes.App) {
-                                popUpTo<SplashNavRoutes.AccountSetupWelcome> {
-                                    inclusive = true
-                                }
-                            }
-                        },
-                        onBackButtonClick = {
-                            splashNavController.popBackStack()
-                        }
-                    )
-                }
-                composable<SplashNavRoutes.App> {
-                    AppContent()
-                }
-            }
+      NavHost(splashNavController, SplashNavRoutes.Splash) {
+        composable<SplashNavRoutes.Splash> {
+          SplashScreen {
+            splashNavController.popBackStack()
+            splashNavController.navigate(it)
+          }
         }
+        composable<SplashNavRoutes.OnBoarding> {
+          GetStartedScreen {
+            splashNavController.navigate(SplashNavRoutes.AccountSetupWelcome)
+          }
+        }
+        composable<SplashNavRoutes.AccountSetupWelcome> {
+          AccountSetupWelcomeScreen {
+            splashNavController.navigate(SplashNavRoutes.AccountSetup)
+          }
+        }
+        composable<SplashNavRoutes.AccountSetup> {
+          AccountSetupScreen(
+            onDoneClick = {
+              splashNavController.navigate(SplashNavRoutes.App) {
+                popUpTo<SplashNavRoutes.OnBoarding> {
+                  inclusive = true
+                }
+              }
+            },
+            onBackButtonClick = {
+              splashNavController.popBackStack()
+            }
+          )
+        }
+        composable<SplashNavRoutes.App> {
+          AppContent()
+        }
+      }
     }
+  }
 }
