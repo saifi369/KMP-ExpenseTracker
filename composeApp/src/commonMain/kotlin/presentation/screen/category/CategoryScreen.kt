@@ -5,10 +5,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -28,10 +31,12 @@ import presentation.theme.AppTheme
 
 @Composable
 fun CategoryScreen() = Column(
-    modifier = Modifier.fillMaxSize().background(AppTheme.colorScheme.mainGreen),
+    modifier = Modifier
+        .fillMaxSize()
+        .background(AppTheme.colorScheme.mainGreen)
+        .windowInsetsPadding(WindowInsets.safeDrawing),
     horizontalAlignment = Alignment.CenterHorizontally
 ) {
-
     Column(
         modifier = Modifier.padding(all = 32.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {

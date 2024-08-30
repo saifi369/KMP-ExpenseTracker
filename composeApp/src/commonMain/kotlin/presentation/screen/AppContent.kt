@@ -25,59 +25,57 @@ import presentation.theme.AppTheme
 @Composable
 fun AppContent() {
 
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val rootNavController = rememberNavController()
-    val currentNavBackStackEntry by rootNavController.currentBackStackEntryAsState()
-    val isHomeScreen = currentNavBackStackEntry?.destination?.hierarchy?.any {
-        it.hasRoute(NavGraphs.Home::class) ||
-                it.hasRoute(NavGraphs.Transactions::class) ||
-                it.hasRoute(NavGraphs.Category::class) ||
-                it.hasRoute(NavGraphs.Profile::class)
-    } == true
+  val keyboardController = LocalSoftwareKeyboardController.current
+  val rootNavController = rememberNavController()
+  val currentNavBackStackEntry by rootNavController.currentBackStackEntryAsState()
+  val isHomeScreen = currentNavBackStackEntry?.destination?.hierarchy?.any {
+    it.hasRoute(NavGraphs.Home::class) ||
+            it.hasRoute(NavGraphs.Transactions::class) ||
+            it.hasRoute(NavGraphs.Category::class) ||
+            it.hasRoute(NavGraphs.Profile::class)
+  } == true
 
-    Scaffold(
-        modifier = Modifier
-            .background(AppTheme.colorScheme.mainGreen)
-            .fillMaxSize(),
-//            .windowInsetsPadding(WindowInsets.safeDrawing),
-        floatingActionButton = {
-            if (isHomeScreen) {
-                MainFab {
-                    rootNavController.navigate(NavGraphs.AddExpense(it.title))
-                }
-            }
-        },
-        bottomBar = {
-            if (isHomeScreen) {
-                BottomNavigationBar(rootNavController)
-            }
+  Scaffold(
+    modifier = Modifier
+      .background(AppTheme.colorScheme.mainGreen)
+      .fillMaxSize(),
+    floatingActionButton = {
+      if (isHomeScreen) {
+        MainFab {
+          rootNavController.navigate(NavGraphs.AddExpense(it.title))
         }
-    ) { innerPadding ->
-
-        NavHost(
-            modifier = Modifier
-//                .padding(innerPadding)
-                .fillMaxSize(),
-            navController = rootNavController,
-            startDestination = NavGraphs.Home
-        ) {
-            composable<NavGraphs.Home> {
-                HomeScreenNavHost()
-            }
-            composable<NavGraphs.AddExpense> {
-                val args = it.toRoute<NavGraphs.AddExpense>()
-                AddExpenseScreen(args.transactionType) {
-                    keyboardController?.hide()
-                    rootNavController.popBackStack()
-                }
-            }
-            composable<NavGraphs.Transactions> {
-            }
-            composable<NavGraphs.Category> {
-                CategoryScreen()
-            }
-            composable<NavGraphs.Profile> {
-            }
-        }
+      }
+    },
+    bottomBar = {
+      if (isHomeScreen) {
+        BottomNavigationBar(rootNavController)
+      }
     }
+  ) { _ ->
+
+    NavHost(
+      modifier = Modifier
+        .fillMaxSize(),
+      navController = rootNavController,
+      startDestination = NavGraphs.Home
+    ) {
+      composable<NavGraphs.Home> {
+        HomeScreenNavHost()
+      }
+      composable<NavGraphs.AddExpense> {
+        val args = it.toRoute<NavGraphs.AddExpense>()
+        AddExpenseScreen(args.transactionType) {
+          keyboardController?.hide()
+          rootNavController.popBackStack()
+        }
+      }
+      composable<NavGraphs.Transactions> {
+      }
+      composable<NavGraphs.Category> {
+        CategoryScreen()
+      }
+      composable<NavGraphs.Profile> {
+      }
+    }
+  }
 }

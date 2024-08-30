@@ -6,8 +6,8 @@ import domain.model.User
 import domain.repo.UserPrefRepo
 import domain.usecase.CreateWalletUseCase
 import domain.usecase.SaveUserUseCase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 class AccountSetupVM(
@@ -16,11 +16,10 @@ class AccountSetupVM(
     private val userPrefRepo: UserPrefRepo,
 ) : ViewModel() {
 
-    private val _isUserSaved = MutableStateFlow(false)
-    val isUserSaved = _isUserSaved.asStateFlow()
+    private val _isUserSaved = MutableSharedFlow<Boolean>()
+    val isUserSaved = _isUserSaved.asSharedFlow()
 
     fun createUser(username: String, walletName: String, walletBalance: Double) {
-        _isUserSaved.value = true
         viewModelScope.launch {
             val user = User(name = username)
             when (saveUserUserUseCase(user)) {
@@ -29,7 +28,7 @@ class AccountSetupVM(
                 }
 
                 is domain.utils.Result.Error -> {
-                    _isUserSaved.value = false
+                    _isUserSaved.emit(false)
                 }
             }
         }
@@ -39,7 +38,7 @@ class AccountSetupVM(
         viewModelScope.launch {
             createWalletUseCase.invoke(walletName, walletBalance)
             setOnboardedStatus(onBoarded = true)
-            _isUserSaved.value = true
+            _isUserSaved.emit(true)
         }
     }
 

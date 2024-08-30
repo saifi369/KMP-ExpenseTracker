@@ -55,138 +55,138 @@ import presentation.theme.AppTheme
 @OptIn(KoinExperimentalAPI::class)
 @Composable
 fun AccountSetupScreen(
-    onDoneClick: () -> Unit,
-    onBackButtonClick: () -> Unit
+  onDoneClick: () -> Unit,
+  onBackButtonClick: () -> Unit
 ) = Column(
-    modifier = Modifier
-        .fillMaxSize()
-        .imePadding()
-        .background(AppColor.mainGreen),
-    verticalArrangement = Arrangement.Top,
-    horizontalAlignment = Alignment.CenterHorizontally
+  modifier = Modifier
+    .fillMaxSize()
+    .imePadding()
+    .background(AppColor.mainGreen),
+  verticalArrangement = Arrangement.Top,
+  horizontalAlignment = Alignment.CenterHorizontally
 ) {
 
-    val viewModel = koinViewModel<AccountSetupVM>()
-    val isUserSaved by viewModel.isUserSaved.collectAsStateWithLifecycle()
-    val scrollState = rememberScrollState()
-    val keyboardController = LocalSoftwareKeyboardController.current
+  val viewModel = koinViewModel<AccountSetupVM>()
+  val isUserSaved by viewModel.isUserSaved.collectAsStateWithLifecycle(null)
+  val scrollState = rememberScrollState()
+  val keyboardController = LocalSoftwareKeyboardController.current
 
-    if (isUserSaved) {
-        LaunchedEffect(Unit) {
-            keyboardController?.hide()
-            onDoneClick()
-        }
+  if (isUserSaved == true) {
+    LaunchedEffect(Unit) {
+      keyboardController?.hide()
+      onDoneClick()
     }
+  }
 
-    AppCenterTopBar(
-        label = stringResource(Res.string.account_setup_screen_toolbar_title_text),
-        startIcon = Icons.AutoMirrored.Filled.ArrowBack,
-        onStartIconClick = onBackButtonClick
+  AppCenterTopBar(
+    label = stringResource(Res.string.account_setup_screen_toolbar_title_text),
+    startIcon = Icons.AutoMirrored.Filled.ArrowBack,
+    onStartIconClick = onBackButtonClick
+  )
+
+  Column(
+    modifier = Modifier
+      .fillMaxSize()
+      .verticalScroll(scrollState),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Bottom
+  ) {
+
+    var accountName by remember { mutableStateOf("") }
+    var walletName by remember { mutableStateOf("") }
+    var walletBalance by remember { mutableStateOf("") }
+
+    SubtitleMediumText(
+      modifier = Modifier
+        .padding(start = 16.dp)
+        .align(Alignment.Start),
+      text = stringResource(Res.string.account_setup_screen_balance_title_text)
+    )
+
+    TextField(
+      modifier = Modifier
+        .height(96.dp)
+        .align(Alignment.Start),
+      value = walletBalance,
+      onValueChange = {
+        walletBalance = it
+      },
+      keyboardOptions = KeyboardOptions(
+        imeAction = ImeAction.Next,
+        keyboardType = KeyboardType.Decimal
+      ),
+      maxLines = 1,
+      singleLine = true,
+      textStyle = TextStyle(
+        fontSize = 48.sp,
+      ),
+      placeholder = { Text(text = "00.0", fontSize = 48.sp) },
+      colors = textFieldTransparentColors
     )
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom
+      Modifier
+        .fillMaxSize()
+        .background(AppColor.backgroundGreen, AppTheme.shape.container)
+        .padding(bottom = 48.dp, start = 16.dp, end = 16.dp, top = 16.dp),
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.SpaceBetween
     ) {
-
-        var accountName by remember { mutableStateOf("") }
-        var walletName by remember { mutableStateOf("") }
-        var walletBalance by remember { mutableStateOf("") }
-
-        SubtitleMediumText(
-            modifier = Modifier
-                .padding(start = 16.dp)
-                .align(Alignment.Start),
-            text = stringResource(Res.string.account_setup_screen_balance_title_text)
-        )
-
-        TextField(
-            modifier = Modifier
-                .height(96.dp)
-                .align(Alignment.Start),
-            value = walletBalance,
-            onValueChange = {
-                walletBalance = it
-            },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next,
-                keyboardType = KeyboardType.Decimal
-            ),
-            maxLines = 1,
-            singleLine = true,
-            textStyle = TextStyle(
-                fontSize = 48.sp,
-            ),
-            placeholder = { Text(text = "00.0", fontSize = 48.sp) },
-            colors = textFieldTransparentColors
-        )
-
-        Column(
-            Modifier
-                .fillMaxSize()
-                .background(AppColor.backgroundGreen, AppTheme.shape.container)
-                .padding(bottom = 48.dp, start = 16.dp, end = 16.dp, top = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            TextField(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .fillMaxWidth(),
-                textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Normal),
-                value = accountName,
-                onValueChange = { accountName = it },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                    capitalization = KeyboardCapitalization.Sentences
-                ),
-                colors = textFieldColors,
-                shape = CircleShape,
-                placeholder = {
-                    Text(
-                        text = stringResource(Res.string.account_setup_screen_username_placeholder_text),
-                        fontSize = 18.sp
-                    )
-                }
-            )
-            TextField(
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .fillMaxWidth(),
-                textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Normal),
-                value = walletName,
-                onValueChange = { walletName = it },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    capitalization = KeyboardCapitalization.Sentences
-                ),
-                colors = textFieldColors,
-                shape = CircleShape,
-                placeholder = {
-                    Text(
-                        text = stringResource(Res.string.account_setup_screen_wallet_title_placeholder_text),
-                        fontSize = 18.sp
-                    )
-                }
-            )
-
-            val isEnabled by remember {
-                derivedStateOf { accountName.isNotEmpty() && walletName.isNotEmpty() && walletBalance.isNotEmpty() }
-            }
-
-            PrimaryButton(
-                modifier = Modifier
-                    .padding(top = 64.dp),
-                text = stringResource(Res.string.continue_button_text),
-                isEnabled = isEnabled
-            ) {
-                viewModel.createUser(accountName, walletName, walletBalance.toDouble())
-            }
+      TextField(
+        modifier = Modifier
+          .padding(top = 8.dp)
+          .fillMaxWidth(),
+        textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Normal),
+        value = accountName,
+        onValueChange = { accountName = it },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(
+          imeAction = ImeAction.Next,
+          capitalization = KeyboardCapitalization.Sentences
+        ),
+        colors = textFieldColors,
+        shape = CircleShape,
+        placeholder = {
+          Text(
+            text = stringResource(Res.string.account_setup_screen_username_placeholder_text),
+            fontSize = 18.sp
+          )
         }
+      )
+      TextField(
+        modifier = Modifier
+          .padding(top = 16.dp)
+          .fillMaxWidth(),
+        textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Normal),
+        value = walletName,
+        onValueChange = { walletName = it },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(
+          imeAction = ImeAction.Done,
+          capitalization = KeyboardCapitalization.Sentences
+        ),
+        colors = textFieldColors,
+        shape = CircleShape,
+        placeholder = {
+          Text(
+            text = stringResource(Res.string.account_setup_screen_wallet_title_placeholder_text),
+            fontSize = 18.sp
+          )
+        }
+      )
+
+      val isEnabled by remember {
+        derivedStateOf { accountName.isNotEmpty() && walletName.isNotEmpty() && walletBalance.isNotEmpty() }
+      }
+
+      PrimaryButton(
+        modifier = Modifier
+          .padding(top = 64.dp),
+        label = stringResource(Res.string.continue_button_text),
+        isEnabled = isEnabled
+      ) {
+        viewModel.createUser(accountName, walletName, walletBalance.toDouble())
+      }
     }
+  }
 }

@@ -14,38 +14,60 @@ import presentation.theme.AppTheme
 
 @Composable
 fun PrimaryButton(
-    modifier: Modifier = Modifier,
-    text: String,
-    isEnabled: Boolean = true,
-    onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  label: String,
+  isEnabled: Boolean = true,
+  onClick: () -> Unit,
 ) {
-    Button(
-        modifier = modifier
-            .width(160.dp)
-            .clip(RoundedCornerShape(16.dp)),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = AppTheme.colorScheme.mainGreen,
-            contentColor = AppTheme.colorScheme.onPrimaryCyprus
-        ),
-        enabled = isEnabled,
-        onClick = { onClick() }
-    ) {
-        Text(text = text, style = AppTheme.typography.titleSmall)
-    }
+  Button(
+    modifier = modifier
+      .width(160.dp)
+      .clip(RoundedCornerShape(16.dp)),
+    colors = ButtonDefaults.buttonColors(
+      containerColor = AppTheme.colorScheme.mainGreen,
+      contentColor = AppTheme.colorScheme.onPrimaryCyprus
+    ),
+    enabled = isEnabled,
+    onClick = { onClick() }
+  ) {
+    Text(text = label, style = AppTheme.typography.titleSmall)
+  }
+}
+
+@Composable
+fun SecondaryButton(
+  modifier: Modifier = Modifier,
+  label: String,
+  isEnabled: Boolean = true,
+  onClick: () -> Unit,
+) {
+  Button(
+    modifier = modifier
+      .width(160.dp)
+      .clip(RoundedCornerShape(16.dp)),
+    colors = ButtonDefaults.buttonColors(
+      containerColor = AppTheme.colorScheme.backgroundGreen,
+      contentColor = AppTheme.colorScheme.onPrimaryCyprus
+    ),
+    enabled = isEnabled,
+    onClick = { onClick() }
+  ) {
+    Text(text = label, style = AppTheme.typography.titleSmall)
+  }
 }
 
 @Composable
 fun TextButtonOnPrimary(modifier: Modifier = Modifier, text: String, onClick: () -> Unit) {
-    Button(
-        modifier = modifier
-            .width(160.dp)
-            .clip(RoundedCornerShape(16.dp)),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = AppColor.backgroundGreen,
-            contentColor = AppColor.onPrimaryCyprus
-        ),
-        onClick = { onClick() }
-    ) {
-        SubtitleMediumText(text = text)
-    }
+  Button(
+    modifier = modifier
+      .width(160.dp)
+      .clip(RoundedCornerShape(16.dp)),
+    colors = ButtonDefaults.buttonColors(
+      containerColor = AppColor.backgroundGreen,
+      contentColor = AppColor.onPrimaryCyprus
+    ),
+    onClick = { onClick() }
+  ) {
+    SubtitleMediumText(text = text)
+  }
 }

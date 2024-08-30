@@ -6,10 +6,14 @@
     <string name="profile_tab_title">Profile</string>
 
     <!--OnBoarding Screen-->
-    <string name="onboarding_screen_one_title_text">Welcome to Expense Manager</string>
-    <string name="onboarding_screen_two_title_text">Are you ready to take control of your finances?</string>
+    <string name="onboarding_screen_one_title_text">Gain total control of your money</string>
+    <string name="onboarding_screen_one_subtitle_text">Become your own money manager and make every cent count</string>
+    <string name="onboarding_screen_two_title_text">Know where your money goes</string>
+    <string name="onboarding_screen_two_subtitle_text">Track your transactions easily, with categories and financial reports</string>
+    <string name="onboarding_screen_three_title_text">Planning ahead</string>
+    <string name="onboarding_screen_three_subtitle_text">Setup your budget for each category so you are in control</string>
     <string name="account_setup_welcome_screen_title_text">Let's setup your account!</string>
-    <string name="account_setup_welcome_screen_subtitle_text">We only support local wallets at the moment</string>
+    <string name="account_setup_welcome_screen_subtitle_text">We only support local wallets at the moment\nYou can manage multiple local wallets</string>
     <string name="account_setup_screen_username_placeholder_text">Enter your name</string>
     <string name="account_setup_screen_wallet_title_placeholder_text">Wallet name e.g. Personal</string>
     <string name="account_setup_screen_toolbar_title_text">Add Wallet</string>

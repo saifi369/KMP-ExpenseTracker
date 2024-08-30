@@ -3,11 +3,14 @@ package presentation.screen.addexpense
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -69,7 +72,8 @@ fun AddExpenseScreen(
         modifier = Modifier
             .fillMaxSize()
             .imePadding()
-            .background(if (transactionType == TransactionType.INCOME.title) AppTheme.colorScheme.green else AppTheme.colorScheme.red),
+            .background(if (transactionType == TransactionType.INCOME.title) AppTheme.colorScheme.green else AppTheme.colorScheme.red)
+            .windowInsetsPadding(WindowInsets.statusBars),
     ) {
 
         val viewModel: AddExpenseVM = koinViewModel()
@@ -281,7 +285,7 @@ fun AddExpenseScreen(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 64.dp),
-                    text = "Save",
+                    label = "Save",
                     isEnabled = isButtonEnabled
                 ) {
                     if (walletList.isNotEmpty()) {
