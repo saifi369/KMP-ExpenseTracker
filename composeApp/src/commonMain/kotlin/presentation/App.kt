@@ -1,5 +1,6 @@
 package presentation
 
+import AllSetScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -41,7 +42,7 @@ fun App() {
         composable<SplashNavRoutes.AccountSetup> {
           AccountSetupScreen(
             onDoneClick = {
-              splashNavController.navigate(SplashNavRoutes.App) {
+              splashNavController.navigate(SplashNavRoutes.AllSet) {
                 popUpTo<SplashNavRoutes.OnBoarding> {
                   inclusive = true
                 }
@@ -51,6 +52,12 @@ fun App() {
               splashNavController.popBackStack()
             }
           )
+        }
+        composable<SplashNavRoutes.AllSet> {
+          AllSetScreen {
+            splashNavController.popBackStack()
+            splashNavController.navigate(SplashNavRoutes.App)
+          }
         }
         composable<SplashNavRoutes.App> {
           AppContent()

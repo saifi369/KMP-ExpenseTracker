@@ -18,4 +18,7 @@ sealed class SplashNavRoutes {
 
     @Serializable
     data object AccountSetup : SplashNavRoutes()
+
+    @Serializable
+    data object AllSet : SplashNavRoutes()
 }

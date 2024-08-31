@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -44,7 +45,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.composables.AppCenterTopBar
 import presentation.composables.PrimaryButton
 import presentation.composables.SubtitleMediumText
-import presentation.composables.textFieldColors
+import presentation.composables.outlinedTextFieldColors
 import presentation.composables.textFieldTransparentColors
 import presentation.screen.addexpense.TextFieldPlaceholderText
 import presentation.theme.AppColor
@@ -128,7 +129,7 @@ fun AccountSetupScreen(
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.SpaceBetween
     ) {
-      TextField(
+      OutlinedTextField(
         modifier = Modifier
           .padding(top = 8.dp)
           .fillMaxWidth(),
@@ -140,11 +141,11 @@ fun AccountSetupScreen(
           imeAction = ImeAction.Next,
           capitalization = KeyboardCapitalization.Sentences
         ),
-        colors = textFieldColors,
+        colors = outlinedTextFieldColors,
         shape = AppTheme.shape.textField,
         placeholder = { TextFieldPlaceholderText(label = stringResource(Res.string.account_setup_screen_username_placeholder_text)) }
       )
-      TextField(
+      OutlinedTextField(
         modifier = Modifier
           .padding(top = 16.dp)
           .fillMaxWidth(),
@@ -156,7 +157,7 @@ fun AccountSetupScreen(
           imeAction = ImeAction.Done,
           capitalization = KeyboardCapitalization.Sentences
         ),
-        colors = textFieldColors,
+        colors = outlinedTextFieldColors,
         shape = AppTheme.shape.textField,
         placeholder = {
           TextFieldPlaceholderText(label = stringResource(Res.string.account_setup_screen_wallet_title_placeholder_text))

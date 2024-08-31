@@ -7,6 +7,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
@@ -131,6 +132,26 @@ val textFieldColors: TextFieldColors
     focusedIndicatorColor = Color.Transparent,
     unfocusedIndicatorColor = Color.Transparent,
     disabledIndicatorColor = Color.Transparent,
+    focusedLabelColor = AppColor.mainGreen,
+    unfocusedLabelColor = AppColor.mainGreen,
+    focusedContainerColor = AppColor.primaryLightGreen,
+    unfocusedContainerColor = AppColor.primaryLightGreen,
+    disabledContainerColor = AppColor.primaryLightGreen,
+    disabledTrailingIconColor = AppColor.onPrimaryCyprus,
+    focusedTrailingIconColor = AppColor.onPrimaryCyprus,
+    unfocusedTrailingIconColor = AppColor.onPrimaryCyprus,
+  )
+
+val outlinedTextFieldColors: TextFieldColors
+  @Composable get() = OutlinedTextFieldDefaults.colors(
+    selectionColors = TextSelectionColors(
+      handleColor = AppColor.mainGreen,
+      backgroundColor = AppColor.mainGreen
+    ),
+    focusedBorderColor = AppTheme.colorScheme.mainGreen,
+    unfocusedBorderColor = AppTheme.colorScheme.mainGreen,
+    disabledBorderColor = AppTheme.colorScheme.mainGreen,
+    cursorColor = AppColor.mainGreen,
     focusedLabelColor = AppColor.mainGreen,
     unfocusedLabelColor = AppColor.mainGreen,
     focusedContainerColor = AppColor.primaryLightGreen,
