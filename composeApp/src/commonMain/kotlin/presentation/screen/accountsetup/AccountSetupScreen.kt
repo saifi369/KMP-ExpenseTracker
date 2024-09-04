@@ -33,8 +33,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mohamedrejeb.calf.ui.timepicker.AdaptiveTimePicker
-import com.mohamedrejeb.calf.ui.timepicker.rememberAdaptiveTimePickerState
 import expensify.composeapp.generated.resources.Res
 import expensify.composeapp.generated.resources.account_setup_screen_balance_title_text
 import expensify.composeapp.generated.resources.account_setup_screen_toolbar_title_text
@@ -147,16 +145,6 @@ fun AccountSetupScreen(
         shape = AppTheme.shape.textField,
         placeholder = { TextFieldPlaceholderText(label = stringResource(Res.string.account_setup_screen_username_placeholder_text)) }
       )
-      val state = rememberAdaptiveTimePickerState(
-        initialHour = 12,
-        initialMinute = 10,
-        is24Hour = true
-      )
-
-
-      //TODO() fix the crash here
-      AdaptiveTimePicker(state)
-
       OutlinedTextField(
         modifier = Modifier
           .padding(top = 16.dp)
@@ -186,7 +174,7 @@ fun AccountSetupScreen(
         label = stringResource(Res.string.continue_button_text),
         isEnabled = isEnabled
       ) {
-//        viewModel.createUser(accountName, walletName, walletBalance.toDouble())
+        viewModel.createUser(accountName, walletName, walletBalance.toDouble())
       }
     }
   }

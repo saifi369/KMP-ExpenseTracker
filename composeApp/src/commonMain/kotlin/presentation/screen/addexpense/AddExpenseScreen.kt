@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,7 +33,6 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -53,6 +53,10 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mohamedrejeb.calf.ui.datepicker.AdaptiveDatePicker
+import com.mohamedrejeb.calf.ui.datepicker.rememberAdaptiveDatePickerState
+import com.mohamedrejeb.calf.ui.sheet.AdaptiveBottomSheet
+import com.mohamedrejeb.calf.ui.sheet.rememberAdaptiveSheetState
 import domain.model.TransactionType
 import expensify.composeapp.generated.resources.Res
 import expensify.composeapp.generated.resources.add_expense_screen_transaction_successful_text
@@ -60,8 +64,11 @@ import expensify.composeapp.generated.resources.ic_checkmark
 import expensify.composeapp.generated.resources.save_button_text
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format.MonthNames
+import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
 import network.chaintech.ui.datepicker.WheelDatePickerView
 import network.chaintech.utils.DateTimePickerView
@@ -216,7 +223,7 @@ fun AddExpenseScreen(
           ) {
             OutlinedTextField(
               modifier = Modifier
-                .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
+                .menuAnchor()
                 .fillMaxWidth(),
               textStyle = AppTheme.typography.bodyLargeRegular,
               readOnly = true,
@@ -252,20 +259,39 @@ fun AddExpenseScreen(
             }
           }
 
-          var showDatePicker by remember { mutableStateOf(false) }
-          var date by remember {
+          val dateFormatter = LocalDate.Format {
+            dayOfMonth()
+            char('-')
+            monthName(MonthNames.ENGLISH_ABBREVIATED)
+            char('-')
+            year()
+          }
+
+          var currentDate by remember {
             mutableStateOf(
-              Clock.System.now()
-                .toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+              dateFormatter.format(
+                Clock.System.now()
+                  .toLocalDateTime(TimeZone.currentSystemDefault()).date
+              )
             )
           }
+          var showDatePicker by remember { mutableStateOf(false) }
+          val adaptiveDatePickerState =
+            rememberAdaptiveDatePickerState(yearRange = 2000..LocalDate.now().year)
+          adaptiveDatePickerState.selectedDateMillis?.let {
+            currentDate = dateFormatter.format(
+              Instant.fromEpochMilliseconds(it)
+                .toLocalDateTime(TimeZone.currentSystemDefault()).date
+            )
+          }
+          val sheetState = rememberAdaptiveSheetState()
 
           OutlinedTextField(
             modifier = Modifier
               .padding(top = 16.dp)
               .fillMaxWidth(),
             textStyle = AppTheme.typography.bodyLargeRegular,
-            value = date,
+            value = currentDate,
             enabled = false,
             onValueChange = {},
             maxLines = 1,
@@ -274,7 +300,7 @@ fun AddExpenseScreen(
             trailingIcon = {
               IconButton(
                 onClick = {
-                  //                                showDatePicker = true
+                  showDatePicker = true
                 }
               ) {
                 Icon(
@@ -285,13 +311,39 @@ fun AddExpenseScreen(
             }
           )
 
-          //TODO(): Fix the crash on iOS
+          if (showDatePicker) {
+            AdaptiveBottomSheet(
+              modifier = Modifier
+                .wrapContentSize(),
+              containerColor = AppTheme.colorScheme.backgroundGreen,
+              onDismissRequest = {
+                showDatePicker = false
+              },
+              adaptiveSheetState = sheetState
+            ) {
+              Column(
+                modifier = Modifier
+                  .wrapContentSize()
+                  .padding(all = 16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+              ) {
+                AdaptiveDatePicker(
+                  state = adaptiveDatePickerState,
+//                  colors = DatePickerDefaults.colors(containerColor = AppTheme.colorScheme.backgroundGreen),
+                  title = {
+                    Text(text = "Choose Date", style = MaterialTheme.typography.labelLarge)
+                  },
+                )
+              }
+            }
+          }
+
           WheelDatePickerView(
             modifier = Modifier.padding(top = 16.dp),
-            showDatePicker = showDatePicker,
+            showDatePicker = false,
             height = 200.dp,
             title = "Choose Date",
-            titleStyle = MaterialTheme.typography.labelLarge,
             doneLabelStyle = MaterialTheme.typography.labelLarge,
             dateTimePickerView = DateTimePickerView.DIALOG_VIEW,
             yearsRange = 2000..LocalDate.now().year,
@@ -299,7 +351,7 @@ fun AddExpenseScreen(
             containerColor = AppColor.backgroundGreen,
             shape = RoundedCornerShape(16.dp),
             onDoneClick = {
-              date = it.toString()
+              currentDate = it.toString()
               showDatePicker = false
             },
             onDismiss = {
@@ -319,7 +371,7 @@ fun AddExpenseScreen(
             keyboardController?.hide()
             viewModel.saveExpense(
               title = expenseTitle,
-              date = date,
+              date = currentDate,
               amount = expenseAmount.toDouble(),
               category = expenseCategory,
               message = expenseNote,

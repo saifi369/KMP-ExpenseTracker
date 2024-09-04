@@ -73,8 +73,12 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            //ViewModel
+            implementation(libs.lifecycle.viewmodel)
 
-            //Voyager
+            implementation(libs.androidx.lifecycle.runtime.compose)
+
+//            //Voyager
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.tab.navigator)
             implementation(libs.voyager.transitions)
@@ -87,8 +91,6 @@ kotlin {
             api(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
-            //ViewModel
-            implementation(libs.lifecycle.viewmodel)
 
             //DataStore
             api(libs.datastore)
